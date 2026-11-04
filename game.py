@@ -1,4 +1,4 @@
-from quiz import Quiz, create_default_quizzes
+from quiz import create_default_quizzes
 
 
 class QuizGame:
@@ -28,6 +28,16 @@ class QuizGame:
             except ValueError:
                 print("숫자만 입력해주세요.")
 
+    def get_required_text(self, message):
+        while True:
+            value = input(message).strip()
+
+            if value == "":
+                print("빈 입력은 사용할 수 없습니다. 다시 입력해주세요.")
+                continue
+
+            return value
+
     def play_quiz(self):
         if not self.quizzes:
             print("등록된 퀴즈가 없습니다.")
@@ -55,6 +65,27 @@ class QuizGame:
         if self.best_score is None or score > self.best_score:
             self.best_score = score
             print("새로운 최고 점수입니다!")
+
+    def add_quiz(self):
+        print("\n새로운 퀴즈를 추가합니다.")
+
+        question = self.get_required_text("문제를 입력하세요: ")
+        choices = []
+
+        for number in range(1, 5):
+            choice = self.get_required_text(
+                f"선택지 {number}를 입력하세요: "
+            )
+            choices.append(choice)
+
+        answer = self.get_number("정답 번호 (1-4): ", 1, 4)
+
+        from quiz import Quiz
+
+        new_quiz = Quiz(question, choices, answer)
+        self.quizzes.append(new_quiz)
+
+        print("퀴즈가 추가되었습니다.")
 
     def show_quiz_list(self):
         if not self.quizzes:
