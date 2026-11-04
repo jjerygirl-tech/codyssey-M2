@@ -1,10 +1,11 @@
-from quiz import create_default_quizzes
+from quiz import Quiz, create_default_quizzes
+from storage import Storage
 
 
 class QuizGame:
     def __init__(self):
-        self.quizzes = create_default_quizzes()
-        self.best_score = None
+        default_quizzes = create_default_quizzes()
+        self.quizzes, self.best_score = Storage.load(default_quizzes)
 
     def get_number(self, message, minimum, maximum):
         while True:
@@ -38,6 +39,9 @@ class QuizGame:
 
             return value
 
+    def save_data(self):
+        Storage.save(self.quizzes, self.best_score)
+
     def play_quiz(self):
         if not self.quizzes:
             print("등록된 퀴즈가 없습니다.")
@@ -66,6 +70,8 @@ class QuizGame:
             self.best_score = score
             print("새로운 최고 점수입니다!")
 
+        self.save_data()
+
     def add_quiz(self):
         print("\n새로운 퀴즈를 추가합니다.")
 
@@ -80,10 +86,9 @@ class QuizGame:
 
         answer = self.get_number("정답 번호 (1-4): ", 1, 4)
 
-        from quiz import Quiz
-
         new_quiz = Quiz(question, choices, answer)
         self.quizzes.append(new_quiz)
+        self.save_data()
 
         print("퀴즈가 추가되었습니다.")
 
