@@ -48,8 +48,9 @@ class QuizGame:
             return
 
         score = 0
+        total = len(self.quizzes)
 
-        print(f"\n퀴즈를 시작합니다! 총 {len(self.quizzes)}문제입니다.")
+        print(f"\n퀴즈를 시작합니다! 총 {total}문제입니다.")
 
         for number, quiz in enumerate(self.quizzes, start=1):
             quiz.show(number)
@@ -61,10 +62,12 @@ class QuizGame:
             else:
                 print(f"오답입니다. 정답은 {quiz.answer}번입니다.")
 
+        percentage = score / total * 100
+
         print(
-            f"\n결과: {len(self.quizzes)}문제 중 "
-            f"{score}문제 정답!"
+            f"\n결과: {total}문제 중 {score}문제 정답!"
         )
+        print(f"점수: {percentage:.0f}점")
 
         if self.best_score is None or score > self.best_score:
             self.best_score = score
@@ -106,4 +109,9 @@ class QuizGame:
         if self.best_score is None:
             print("아직 퀴즈를 푼 기록이 없습니다.")
         else:
-            print(f"최고 점수: {self.best_score}점")
+            total = len(self.quizzes)
+            percentage = self.best_score / total * 100
+            print(
+                f"최고 점수: {self.best_score}/{total} "
+                f"({percentage:.0f}점)"
+            )
