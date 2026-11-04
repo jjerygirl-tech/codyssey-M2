@@ -1,3 +1,6 @@
+from game import QuizGame
+
+
 def show_menu():
     print("\n" + "=" * 40)
     print("        파이썬 기초 퀴즈 게임")
@@ -11,15 +14,23 @@ def show_menu():
 
 
 def main():
+    game = QuizGame()
+
     while True:
         show_menu()
         choice = input("선택: ").strip()
 
-        if choice == "5":
+        if choice == "1":
+            game.play_quiz()
+        elif choice == "2":
+            print("퀴즈 추가 기능은 다음 단계에서 구현합니다.")
+        elif choice == "3":
+            game.show_quiz_list()
+        elif choice == "4":
+            game.show_score()
+        elif choice == "5":
             print("프로그램을 종료합니다.")
             break
-        elif choice in ["1", "2", "3", "4"]:
-            print("이 기능은 다음 단계에서 구현합니다.")
         else:
             print("1부터 5 사이의 번호를 입력하세요.")
 
