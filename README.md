@@ -48,3 +48,8 @@ Python 기본 문법을 연습하기 위해 만든 콘솔 퀴즈 게임입니다
 
 python main.py
 
+
+## Clone 실습
+
+이 저장소를 별도 폴더에 clone한 뒤 README를 수정했습니다.
+
