@@ -16,23 +16,30 @@ def show_menu():
 def main():
     game = QuizGame()
 
-    while True:
-        show_menu()
-        choice = input("선택: ").strip()
+    try:
+        while True:
+            show_menu()
+            choice = input("선택: ").strip()
 
-        if choice == "1":
-            game.play_quiz()
-        elif choice == "2":
-            game.add_quiz()
-        elif choice == "3":
-            game.show_quiz_list()
-        elif choice == "4":
-            game.show_score()
-        elif choice == "5":
-            print("프로그램을 종료합니다.")
-            break
-        else:
-            print("1부터 5 사이의 번호를 입력하세요.")
+            if choice == "1":
+                game.play_quiz()
+            elif choice == "2":
+                game.add_quiz()
+            elif choice == "3":
+                game.show_quiz_list()
+            elif choice == "4":
+                game.show_score()
+            elif choice == "5":
+                print("프로그램을 종료합니다.")
+                break
+            else:
+                print("1부터 5 사이의 번호를 입력하세요.")
+
+    except (KeyboardInterrupt, EOFError):
+        print("\n입력이 중단되었습니다. 데이터를 저장하고 종료합니다.")
+
+    finally:
+        game.save_data()
 
 
 if __name__ == "__main__":
