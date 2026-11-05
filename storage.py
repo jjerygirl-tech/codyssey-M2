@@ -11,7 +11,7 @@ class Storage:
     def load(cls, default_quizzes):
         if not cls.STATE_FILE.exists():
             print("저장된 데이터가 없어 기본 퀴즈를 사용합니다.")
-            return default_quizzes, None
+            return default_quizzes, None, []
 
         try:
             with cls.STATE_FILE.open("r", encoding="utf-8") as file:
@@ -22,9 +22,13 @@ class Storage:
 
             quiz_data = data.get("quizzes")
             best_score = data.get("best_score")
+            history_data = data.get("history", [])
 
             if not isinstance(quiz_data, list):
                 raise ValueError("퀴즈 목록 형식이 올바르지 않습니다.")
+
+            if not isinstance(history_data, list):
+                raise ValueError("점수 기록 형식이 올바르지 않습니다.")
 
             quizzes = []
 
@@ -35,6 +39,7 @@ class Storage:
                 question = item.get("question")
                 choices = item.get("choices")
                 answer = item.get("answer")
+                hint = item.get("hint", "")
 
                 if (
                     not isinstance(question, str)
@@ -44,31 +49,60 @@ class Storage:
                     or not all(isinstance(choice, str) for choice in choices)
                     or not isinstance(answer, int)
                     or answer not in range(1, 5)
+                    or not isinstance(hint, str)
                 ):
                     raise ValueError("퀴즈 데이터 값이 올바르지 않습니다.")
 
-                quizzes.append(Quiz(question, choices, answer))
+                quizzes.append(Quiz(question, choices, answer, hint))
 
             if best_score is not None and (
                 not isinstance(best_score, int) or best_score < 0
             ):
                 raise ValueError("최고 점수 형식이 올바르지 않습니다.")
 
+            history = []
+
+            for record in history_data:
+                if not isinstance(record, dict):
+                    raise ValueError("점수 기록 형식이 올바르지 않습니다.")
+
+                played_at = record.get("played_at")
+                question_count = record.get("question_count")
+                score = record.get("score")
+
+                if (
+                    not isinstance(played_at, str)
+                    or not isinstance(question_count, int)
+                    or question_count < 1
+                    or not isinstance(score, int)
+                    or score < 0
+                ):
+                    raise ValueError("점수 기록 값이 올바르지 않습니다.")
+
+                history.append(
+                    {
+                        "played_at": played_at,
+                        "question_count": question_count,
+                        "score": score,
+                    }
+                )
+
             print(
                 f"저장된 데이터를 불러왔습니다. "
-                f"퀴즈 {len(quizzes)}개"
+                f"퀴즈 {len(quizzes)}개, 기록 {len(history)}개"
             )
-            return quizzes, best_score
+            return quizzes, best_score, history
 
         except (json.JSONDecodeError, OSError, ValueError, KeyError):
             print("저장 파일이 손상되어 기본 퀴즈로 초기화합니다.")
-            return default_quizzes, None
+            return default_quizzes, None, []
 
     @classmethod
-    def save(cls, quizzes, best_score):
+    def save(cls, quizzes, best_score, history):
         data = {
             "quizzes": [quiz.to_dict() for quiz in quizzes],
             "best_score": best_score,
+            "history": history,
         }
 
         try:

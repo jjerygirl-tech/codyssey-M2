@@ -12,13 +12,22 @@ def test_storage_round_trip():
         Storage.STATE_FILE = Path(temp_directory) / "state.json"
 
         quizzes = create_default_quizzes()
-        Storage.save(quizzes, 4)
+        history = [
+            {
+                "played_at": "2026-11-05 12:00:00",
+                "question_count": 3,
+                "score": 2,
+            }
+        ]
+        Storage.save(quizzes, 4, history)
 
-        loaded_quizzes, best_score = Storage.load([])
+        loaded_quizzes, best_score, loaded_history = Storage.load([])
 
         assert len(loaded_quizzes) == 5
         assert best_score == 4
         assert loaded_quizzes[0].question == quizzes[0].question
+        assert loaded_quizzes[0].hint == quizzes[0].hint
+        assert loaded_history == history
 
     Storage.STATE_FILE = original_state_file
 

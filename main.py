@@ -8,8 +8,10 @@ def show_menu():
     print("1. 퀴즈 풀기")
     print("2. 퀴즈 추가")
     print("3. 퀴즈 목록")
-    print("4. 점수 확인")
-    print("5. 종료")
+    print("4. 최고 점수 확인")
+    print("5. 퀴즈 삭제")
+    print("6. 점수 기록 보기")
+    print("7. 종료")
     print("=" * 40)
 
 
@@ -30,10 +32,14 @@ def main():
             elif choice == "4":
                 game.show_score()
             elif choice == "5":
+                game.delete_quiz()
+            elif choice == "6":
+                game.show_history()
+            elif choice == "7":
                 print("프로그램을 종료합니다.")
                 break
             else:
-                print("1부터 5 사이의 번호를 입력하세요.")
+                print("1부터 7 사이의 번호를 입력하세요.")
 
     except (KeyboardInterrupt, EOFError):
         print("\n입력이 중단되었습니다. 데이터를 저장하고 종료합니다.")
